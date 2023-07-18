@@ -1,0 +1,23 @@
+Add-Type -AssemblyName System.Windows.Forms
+
+$sourceDialog = New-Object System.Windows.Forms.FolderBrowserDialog
+$destinationDialog = New-Object System.Windows.Forms.FolderBrowserDialog
+
+$null = $sourceDialog.ShowDialog()
+$null = $destinationDialog.ShowDialog()
+
+$source = $sourceDialog.SelectedPath
+$destination = $destinationDialog.SelectedPath
+
+if ([string]::IsNullOrEmpty($source) -or [string]::IsNullOrEmpty($destination))
+{
+    Write-Host "Sélection de dossier annulée. Le programme s'arrête."
+    Exit
+}
+
+$arguments = "/E /XC /XN /XO /XX /NFL /NDL /NJH /NJS /R:0"
+$command = "robocopy `"$source`" `"$destination`" $arguments"
+
+Write-Host "Début de la copie des fichiers..."
+Invoke-Expression -Command $command
+Write-Host "Copie terminée."
